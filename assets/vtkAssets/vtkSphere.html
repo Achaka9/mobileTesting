@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTK Sphere Visualization</title>
+    <script src="https://unpkg.com/@kitware/vtk.js"></script>
+</head>
+<body>
+    <div id="vtk-container" style="width: 100%; height: 100vh;"></div>
+    <script>
+        const { vtkSphereSource, vtkActor, vtkMapper, vtkRenderer, vtkRenderWindow, vtkRenderWindowInteractor } = vtk;
+
+        const container = document.getElementById('vtk-container');
+        const renderWindow = vtkRenderWindow.newInstance();
+        const renderer = vtkRenderer.newInstance();
+        renderWindow.addRenderer(renderer);
+
+        const sphereSource = vtkSphereSource.newInstance({
+            radius: 1,
+            phiResolution: 20,
+            thetaResolution: 20
+        });
+
+        const mapper = vtkMapper.newInstance();
+        mapper.setInputConnection(sphereSource.getOutputPort());
+
+        const actor = vtkActor.newInstance();
+        actor.setMapper(mapper);
+
+        renderer.addActor(actor);
+        renderer.resetCamera();
+        renderer.getRenderWindow().render();
+
+        const interactor = vtkRenderWindowInteractor.newInstance();
+        interactor.setView(renderWindow);
+        interactor.initialize();
+        interactor.bindEvents(container);
+    </script>
+</body>
+</html>

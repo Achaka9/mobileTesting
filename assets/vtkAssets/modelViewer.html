@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+</head>
+<body style="margin:0;">
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        new THREE.OBJLoader()
+            .load('./assets/Objects/tshirt.obj', function (object) {
+                object.traverse(function (child) {
+                    if (child.isMesh) {
+                        var texture = new THREE.TextureLoader().load('./assets/Images/segmented_image.jpg');
+                        child.material.map = texture;
+                    }
+                });
+                scene.add(object);
+            });
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
